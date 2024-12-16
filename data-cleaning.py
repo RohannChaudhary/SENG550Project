@@ -90,6 +90,17 @@ window_spec = Window.partitionBy("title").orderBy(col("runtime").desc())
 df_cleaned = df_cleaned.withColumn("rank", row_number().over(window_spec))
 df_cleaned = df_cleaned.filter(col("rank") == 1).drop("rank")
 
+
+# Replace non-numerical values in `imdb_score`, `imdb_votes`, `tmdb_score`, and `tmdb_popularity` with null
+numerical_columns = ["imdb_score", "imdb_votes", "tmdb_score", "tmdb_popularity"]
+
+for column in numerical_columns:
+    df_cleaned = df_cleaned.withColumn(
+        column,
+        when(col(column).rlike("^[0-9]+(\\.[0-9]+)?$"), col(column))  # Retain valid numerical values
+        .otherwise(None)  # Replace non-numerical values with null
+    )
+
 # Verify no duplicates remain
 duplicates = df_cleaned.groupBy("title").agg(count("title").alias("count")).filter(col("count") > 1)
 print(f"Total duplicate titles after removal: {duplicates.count()}")
