@@ -17,12 +17,15 @@ df = spark.read.csv(
     "titles.csv",
     header=True,
     inferSchema=True,
-    multiLine=True,         # Enables parsing of multi-line fields
-    escape='"',             # Handles fields with embedded quotes
-    quote='"',              # Specifies the quoting character
-    sep=",",                # Use 'sep' instead of 'delimiter'
-    mode="PERMISSIVE"       # Flags malformed rows without dropping them
+    multiLine=True,        
+    escape='"',            
+    quote='"',           
+    sep=",",                
+    mode="PERMISSIVE"       
 )
+# Rearrange columns to move 'description' to the end (longest but not really needed)
+columns = [col for col in df.columns if col != "description"] + ["description"]
+df_reordered = df.select(columns)
 
 # Initial row count
 print(f"Initial row count: {df.count()}")
@@ -30,7 +33,7 @@ print(f"Initial row count: {df.count()}")
 # =============================
 # Step 3: Drop Rows with Null Critical Columns
 # =============================
-df_cleaned = df.filter((df["title"].isNotNull()) & (df["type"].isNotNull()))
+df_cleaned = df_reordered.filter((df["title"].isNotNull()) & (df["type"].isNotNull()))
 df_cleaned = df_cleaned.filter(
     (df_cleaned["genres"].isNotNull()) & (df_cleaned["production_countries"].isNotNull())
 )
