@@ -18,7 +18,7 @@ cleaned_df = df.withColumn(
 cleaned_df = cleaned_df.withColumn("Country", trim(col("Country"))).withColumn("Genre", trim(col("Genre")))
 
 # Filter out NULL or empty values
-cleaned_df = cleaned_df.filter((col("Country") != "") & (col("Country").isNotNull()))
+cleaned_df = cleaned_df.filter((col("Country") != "") & (col("Country").isNotNull()) & (col("Country") != "romance"))
 cleaned_df = cleaned_df.filter((col("Genre") != "") & (col("Genre").isNotNull()))
 
 # Total number of unique genres
