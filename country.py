@@ -7,7 +7,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # Load the dataset with robust options to handle malformed rows
-data_path = "cleaned-titles.csv"  # Update with your dataset path
+data_path = "cleaned_titles.csv/file.csv" 
 df = spark.read.csv(
     data_path, 
     header=True, 
@@ -15,7 +15,6 @@ df = spark.read.csv(
     mode="DROPMALFORMED"  # Drop malformed rows
 )
 
-# Explicitly select the 'production_countries' column
 df_cleaned = df.select("production_countries").withColumn(
     "production_countries", 
     regexp_replace(col("production_countries"), r"[\'\[\]]", "")  # Remove square brackets and single quotes
@@ -48,7 +47,7 @@ country_percentage = valid_country_counts.withColumn(
 top_10_countries = country_percentage.orderBy(col("percentage_share").desc()).limit(10)
 
 # Write results to CSV files
-output_path = "output"  # Directory where results will be saved
+output_path = "output_country"
 country_percentage.write.csv(f"{output_path}/country_percentage.csv", header=True, mode="overwrite")
 top_10_countries.write.csv(f"{output_path}/top_10_countries.csv", header=True, mode="overwrite")
 
