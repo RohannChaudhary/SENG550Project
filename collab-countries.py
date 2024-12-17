@@ -1,9 +1,11 @@
-#PROMPT 4
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode, col, count, split, lower, trim, array_distinct, size, regexp_replace
+from pyspark.sql.functions import (
+    explode, col, split, regexp_replace, trim, lower, array_distinct, size,
+    least, greatest, count
+)
 
 # Initialize Spark session
-spark = SparkSession.builder.appName("NetflixCollaborations").getOrCreate()
+spark = SparkSession.builder.appName("CountryPairCount").getOrCreate()
 
 # Load the dataset
 df = spark.read.csv("cleaned-data.csv", header=True, inferSchema=True)
@@ -11,26 +13,29 @@ df = spark.read.csv("cleaned-data.csv", header=True, inferSchema=True)
 # =============================
 # Step 1: Clean and Convert Stringified Lists to Arrays
 # =============================
-# Ensure production_countries is treated as an array
+# Clean and split stringified lists into proper arrays
 df_cleaned = df.withColumn(
     "production_countries",
     array_distinct(
         split(
-            regexp_replace(trim(col("production_countries")), "[\\[\\]\\']", ""), ","
+            regexp_replace(
+                trim(lower(col("production_countries"))), "[\\[\\]\\' ]+", ""  # Remove unwanted characters
+            ),
+            ","
         )
     )
 )
 
 # =============================
-# Step 2: Filter Titles with Multiple Countries
+# Step 2: Filter for Titles with Multiple Countries
 # =============================
-# Filter for titles with at least 2 production countries
+# Filter titles with at least 2 countries in production_countries
 df_multi_country = df_cleaned.filter(size(col("production_countries")) > 1)
 
 # =============================
-# Step 3: Generate Country Pairs for Each Title
+# Step 3: Generate All Unique Country Pairs for Each Title
 # =============================
-# Explode the list column into individual rows
+# Explode the array to generate all combinations of country pairs
 df_country_pairs = df_multi_country.select(
     col("title"),
     explode(col("production_countries")).alias("country_1")
@@ -40,42 +45,32 @@ df_country_pairs = df_multi_country.select(
         explode(col("production_countries")).alias("country_2")
     ),
     on="title"
-).filter(col("country_1") < col("country_2"))  # Avoid self-pairs and duplicate pairs
+)
+
+# Sort country pairs alphabetically and filter out self-pairs
+df_country_pairs = df_country_pairs.withColumn(
+    "country_1", least(col("country_1"), col("country_2"))
+).withColumn(
+    "country_2", greatest(col("country_1"), col("country_2"))
+).filter(col("country_1") != col("country_2"))  # Remove self-pairs like 'us, us'
+
+# Remove duplicates within each title to avoid redundant pairs
+df_country_pairs = df_country_pairs.dropDuplicates(["title", "country_1", "country_2"])
 
 # =============================
-# Step 4: Aggregate Collaborations
+# Step 4: Aggregate the Number of Titles for Each Country Pair
 # =============================
-# Count the number of titles for each country pair
-country_collaborations = df_country_pairs.groupBy("country_1", "country_2") \
-                                        .agg(count("title").alias("collaboration_count")) \
-                                        .orderBy(col("collaboration_count").desc())
+# Group by country pairs and count the number of titles
+country_pair_counts = df_country_pairs.groupBy("country_1", "country_2") \
+                                      .agg(count("title").alias("shared_titles_count")) \
+                                      .orderBy(col("shared_titles_count").desc())
 
 # =============================
-# Step 5: Calculate Percentage of Multi-Country Titles
+# Step 5: Show and Save Results
 # =============================
-# Total number of titles
-total_titles = df_cleaned.count()
+# Show top country pairs with their shared titles count
+print("Top Country Pairs and Their Shared Titles Count:")
+country_pair_counts.show(10, truncate=False)
 
-# Total number of multi-country titles
-multi_country_titles = df_multi_country.count()
-
-# Calculate percentage of multi-country titles
-percentage = (multi_country_titles / total_titles) * 100
-print(f"Percentage of titles produced by multiple countries: {percentage:.2f}%")
-
-# =============================
-# Step 6: Show Results
-# =============================
-# Show top collaborating countries
-print("Top Collaborating Countries:")
-country_collaborations.show(10, truncate=False)
-
-# =============================
-# Step 7: Fix Output Before Saving
-# =============================
-# Clean country pairs before saving to CSV
-country_collaborations_cleaned = country_collaborations.withColumn("country_1", trim(lower(col("country_1")))) \
-                                                      .withColumn("country_2", trim(lower(col("country_2"))))
-
-# Save the cleaned results to a CSV file
-country_collaborations_cleaned.write.csv("top_collab_countries.csv", header=True, mode="overwrite")
+# Save the results to a CSV file
+country_pair_counts.write.csv("top_collab_countries.csv", header=True, mode="overwrite")
