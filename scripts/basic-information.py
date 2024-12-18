@@ -1,11 +1,11 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import countDistinct, col, split, explode, trim, regexp_replace
+from pyspark.sql.functions import countDistinct, col, split, explode, trim, regexp_replace, count
 
 # Initialize Spark session
 spark = SparkSession.builder.appName("DatasetBasicInfo").getOrCreate()
 
 # Load the dataset
-file_path = "cleaned_titles.csv/file.csv" 
+file_path = "../cleaned_titles.csv/file.csv" 
 df = spark.read.csv(file_path, header=True, inferSchema=True)
 
 cleaned_df = df.withColumn(
@@ -20,6 +20,20 @@ cleaned_df = cleaned_df.withColumn("Country", trim(col("Country"))).withColumn("
 # Filter out NULL or empty values
 cleaned_df = cleaned_df.filter((col("Country") != "") & (col("Country").isNotNull()) & (col("Country") != "romance"))
 cleaned_df = cleaned_df.filter((col("Genre") != "") & (col("Genre").isNotNull()))
+
+# Count total titles (movies and shows)
+total_titles_count = cleaned_df.count()
+
+# Count the number of movies and shows
+type_counts = cleaned_df.groupBy("type").agg(count("*").alias("TitleCount"))
+
+# Calculate the percentage of each type
+type_counts_with_percentage = type_counts.withColumn(
+    "Percentage", (col("TitleCount") / total_titles_count) * 100
+)
+
+# Save type percentages to CSV
+type_counts_with_percentage.write.csv("type_percentages.csv", header=True, mode="overwrite")
 
 # Total number of unique genres
 unique_genres_count = cleaned_df.select(countDistinct("Genre").alias("TotalUniqueGenres"))
