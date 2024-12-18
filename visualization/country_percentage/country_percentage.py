@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the dataset
-file_path = "../../datasets/percentage_share_of_titles_per_country.csv"  # Replace with the correct path
+file_path = "../../datasets/percentage_share_of_titles_per_country.csv" 
 df = pd.read_csv(file_path)
 
 # Sort by percentage share in descending order
