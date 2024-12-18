@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the dataset
-file_path = "../../datasets/percentage_share_of_titles_per_country.csv"  # Replace with the correct path
+file_path = "../../datasets/percentage_share_of_titles_per_country.csv" 
 df = pd.read_csv(file_path)
 
 # Sort by percentage share in descending order
@@ -22,15 +22,32 @@ others = pd.DataFrame({
 # Combine top countries and "Others"
 combined_df = pd.concat([top_countries, others])
 
-# Plot: Pie Chart
+# Define Netflix-themed colors (red and darker tones)
+netflix_colors = ["#E50914", "#B81D24", "#900C3F", "#FF5733", "#C70039", "#7E0E14", "#404040"]
+
+# Set the dark background style
+plt.style.use("dark_background")
+
+# Plot: Netflix-Themed Pie Chart
 plt.figure(figsize=(10, 8))
-plt.pie(
+wedges, texts, autotexts = plt.pie(
     combined_df["percentage_share"], 
     labels=combined_df["country"], 
     autopct="%.2f%%", 
-    startangle=140, 
-    textprops={'fontsize': 10}
+    startangle=140,
+    colors=netflix_colors,       # Apply Netflix-themed colors
+    textprops={'fontsize': 10, 'color': "white"},  # White text for contrast
+    wedgeprops={'edgecolor': "black", 'linewidth': 1}  # Add black edges for clarity
 )
-plt.title("Percentage Contribution of Top 6 Countries and Others")
-plt.savefig("countries_pie_chart.png")  # Save the figure
+
+# Customize percentage text to be bold
+for autotext in autotexts:
+    autotext.set_color("white")
+    autotext.set_fontweight("bold")
+
+# Title with white text
+plt.title("Percentage Contribution of Top 6 Countries and Others", fontsize=14, color="white", weight="bold")
+
+# Save the Netflix-themed pie chart
+plt.savefig("countries_pie_chart.png", dpi=300, bbox_inches="tight")
 plt.close()
