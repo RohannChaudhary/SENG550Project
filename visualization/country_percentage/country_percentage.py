@@ -4,6 +4,7 @@ import plotly.express as px
 import pycountry
 import numpy as np
 from plotly.io import write_image
+import plotly.graph_objects as go
 
 # Load the dataset
 file_path = "../../datasets/percentage_share_of_titles_per_country.csv" 
@@ -76,37 +77,47 @@ df = df.rename(columns={"percentage_share": "PercentageShare"})
 
 df['LogPercentageShare'] = np.log1p(df['PercentageShare'])  # log(1 + x) to handle 0 values gracefully
 
-# Create a Choropleth Map with logarithmic scaling
-fig = px.choropleth(
-    df,
-    locations="ISO-3",  # Use ISO-3 country codes
-    locationmode="ISO-3",  # Use ISO-3 mode
-    color="LogPercentageShare",  # Use log-transformed values for color scaling
-    hover_name="country",  # Show original country code/name on hover
-    title="Choropleth Map (Log Scale) of Title Percentage by Country",
-    color_continuous_scale="Reds",  # Netflix-themed red gradient
-    labels={"LogPercentageShare": "Log(Percentage Share)"}  # Legend label
+# Create the Choropleth Map
+choropleth = go.Choropleth(
+    locations=df['ISO-3'],
+    z=df['LogPercentageShare'],
+    text=df['country'],
+    hoverinfo="location+z+text", 
+    colorscale="Reds",
+    marker_line_color="white"
 )
 
-# Style the layout for Netflix theme
+# Add scattergeo for labels with black text and smaller font size
+scattergeo = go.Scattergeo(
+    locations=df['ISO-3'],
+    text=df['country'] + "<br>" + df['PercentageShare'].round(2).astype(str) + "%", 
+    mode="text",
+    textfont=dict(size=7, color="black"), 
+)
+
+# Combine both traces
+fig = go.Figure(data=[choropleth, scattergeo])
+
+# Update layout
 fig.update_layout(
     geo=dict(
-        bgcolor="black",  # Black background for the map
-        lakecolor="black",
+        projection_type="natural earth",
+        bgcolor="black",
         showland=True,
         landcolor="black",
         showcountries=True,
         countrycolor="white",
     ),
-    paper_bgcolor="black",  # Black background
-    font=dict(color="white"),
-    title_font=dict(size=20, color="white")
+    title="Netflix-Themed Choropleth Map with Smaller Labels",
+    title_font=dict(size=20, color="white"),
+    paper_bgcolor="black",
 )
 
-# Save the map as an interactive HTML file
+# Save the interactive map as HTML
 fig.write_html("netflix_log_percentage_share_map.html")
-fig.write_image("netflix_log_percentage_share_map.png", format="png", scale=2)
 
+# Save the map as PNG
+fig.write_image("netflix_log_percentage_share_map", format="png", scale=2)
 
-# Show the interactive map
+# Show the map
 fig.show()
