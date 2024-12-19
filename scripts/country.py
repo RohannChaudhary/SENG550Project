@@ -7,7 +7,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # Load the dataset with robust options to handle malformed rows
-data_path = "cleaned_titles.csv/file.csv" 
+data_path = "../cleaned_titles.csv/file.csv" 
 df = spark.read.csv(
     data_path, 
     header=True, 
@@ -25,7 +25,7 @@ df_filtered = df_cleaned.filter(trim(col("production_countries")) != "")
 
 # Split and explode the 'production_countries' column to handle multiple countries
 countries_df = df_filtered.select(
-    explode(split(col("production_countries"), r",\s*")).alias("country")  # Split and create rows for each country
+    explode(split(col("production_countries"), r",\s*")).alias("country")  
 )
 
 # Group by country and count titles

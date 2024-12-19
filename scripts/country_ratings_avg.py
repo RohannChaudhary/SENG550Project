@@ -6,7 +6,7 @@ from pyspark.sql.functions import split, regexp_replace, trim, col, explode, low
 # Initialize Spark session
 spark = SparkSession.builder.appName("CountryRatingsAggregation").getOrCreate()
 
-# Load the dataset
+# Loading the dataset
 df = spark.read.csv("cleaned-data.csv", header=True, inferSchema=True)
 
 # =============================

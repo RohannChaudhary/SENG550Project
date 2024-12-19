@@ -1,7 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
+
 
 # Load the dataset
 file_path = "../../datasets/temporal_trends.csv"
@@ -12,7 +11,7 @@ df = df[df["release_year"] >= 1990]
 # Group by release_year and calculate total titles
 yearly_totals = df.groupby("release_year")["TotalTitles"].sum().reset_index()
 
-# Set Netflix-like dark theme
+
 plt.style.use("dark_background")
 
 # Plot: Total Titles over the Years
@@ -22,10 +21,10 @@ plt.plot(
     yearly_totals["TotalTitles"],
     marker="o",
     linestyle="-",
-    color="#E50914",  # Netflix Red for the line
-    linewidth=2,      # Line thickness
-    markerfacecolor="#FF5733",  # Bright orange for markers
-    markeredgecolor="white",    # Marker edges in white
+    color="#E50914", 
+    linewidth=2,    
+    markerfacecolor="#FF5733",  
+    markeredgecolor="white",   
     markersize=8
 )
 
@@ -59,7 +58,6 @@ plt.close()
 # # Set Netflix-like theme
 # plt.style.use("dark_background")  # Use a dark background
 
-# # Define a custom Netflix-like colormap
 # netflix_colors = ["#E50914", "#FF5733", "#900C3F", "#221F1F", "#C70039"]
 
 # # Plot: Stacked Area Chart
@@ -73,8 +71,8 @@ plt.close()
 # plt.legend(title="Country", facecolor="#221F1F", edgecolor="white", labelcolor="white")
 # plt.grid(color="grey", linestyle="--", linewidth=0.5)
 
-# # Save the Netflix-themed figure
-# plt.savefig("top_countries_over_time_netflix.png", dpi=300, bbox_inches="tight")  # High resolution
+
+# plt.savefig("top_countries_over_time_netflix.png", dpi=300, bbox_inches="tight") 
 # plt.close()
 
 

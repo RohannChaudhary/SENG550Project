@@ -40,9 +40,9 @@ df = pd.read_csv(file_path)
 #     labels=combined_df["country"], 
 #     autopct="%.2f%%", 
 #     startangle=140,
-#     colors=netflix_colors,       # Apply Netflix-themed colors
-#     textprops={'fontsize': 10, 'color': "white"},  # White text for contrast
-#     wedgeprops={'edgecolor': "black", 'linewidth': 1}  # Add black edges for clarity
+#     colors=netflix_colors,       
+#     textprops={'fontsize': 10, 'color': "white"},  
+#     wedgeprops={'edgecolor': "black", 'linewidth': 1}  
 # )
 
 # # Customize percentage text to be bold

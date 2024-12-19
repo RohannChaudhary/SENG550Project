@@ -7,8 +7,8 @@ import seaborn as sns
 # Initialize Spark session
 spark = SparkSession.builder.appName("IMDbVotesAndPopularity").getOrCreate()
 
-# Load the dataset
-file_path = "../cleaned_titles.csv/file.csv"  # Replace with your actual file path
+# Loading the dataset
+file_path = "../cleaned_titles.csv/file.csv"
 df = spark.read.csv(file_path, header=True, inferSchema=True)
 
 # Filter rows with valid IMDb votes and TMDB popularity

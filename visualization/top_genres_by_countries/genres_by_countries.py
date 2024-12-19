@@ -7,8 +7,8 @@ import numpy as np
 # =============================
 
 # Path to your CSV file
-file_path = "../../datasets/common_top3_genres.csv"  # Update this to correct path
-output_image_path = "./top_genres_pie_chart_final.png"  # Path to save the image
+file_path = "../../datasets/common_top3_genres.csv"  
+output_image_path = "./top_genres_pie_chart_final.png"  
 
 # Read the CSV file
 df = pd.read_csv(file_path)
@@ -46,28 +46,27 @@ wedges, texts = ax.pie(
 # Add labels outside with better arrows
 for i, (p, label) in enumerate(zip(wedges, labels)):
     # Calculate label position
-    ang = (p.theta2 - p.theta1) / 2 + p.theta1  # Mid angle of the slice
+    ang = (p.theta2 - p.theta1) / 2 + p.theta1  
     x = 1.15 * np.cos(np.radians(ang))
     y = 1.15 * np.sin(np.radians(ang))
 
-    # Label position (slightly farther out)
     ax.annotate(
-        f"{label} ({sizes[i]})",      # Label with genre and count
-        xy=(x, y),                    # Arrow end point
-        xytext=(1.7 * x, 1.7 * y),    # Label position farther out
+        f"{label} ({sizes[i]})",      
+        xy=(x, y),                    
+        xytext=(1.7 * x, 1.7 * y),    
         arrowprops=dict(
             arrowstyle="wedge,tail_width=0.5", color="white", lw=1.5
-        ),  # Better arrows
+        ),  
         ha="center", va="center", fontsize=10, color="white"
     )
 
-# Add title
+
 plt.title(
     "Number of countries that have the Genre in their top 3", 
     fontsize=20, color="white", pad=150
 )
 
-# Adjust layout for better spacing
+
 plt.subplots_adjust(top=0.85, left=0.1, right=0.9, bottom=0.1)
 plt.tight_layout()
 

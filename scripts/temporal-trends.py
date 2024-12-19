@@ -5,7 +5,7 @@ from pyspark.sql.types import IntegerType
 # Initialize Spark session
 spark = SparkSession.builder.appName("CountryContributionTrends").getOrCreate()
 
-# Load the dataset into a Spark DataFrame
+# Load the dataset
 file_path = "cleaned_titles.csv/file.csv"
 netflix_df = spark.read.csv(file_path, header=True, inferSchema=True)
 

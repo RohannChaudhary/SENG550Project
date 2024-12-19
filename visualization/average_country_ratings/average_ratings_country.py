@@ -40,8 +40,7 @@ df = df.dropna(subset=['ISO-3', 'Rating'])
 choropleth = go.Choropleth(
     locations=df['ISO-3'],                 # ISO-3 country codes
     z=df['Rating'],                        # Ratings column
-    text=df['ISO-3'],                      # ISO-3 for hover
-    hovertemplate=(
+    hovertemplate=(                        # Hover tooltip
         "<b>%{text}</b><br>"
         "Average Rating: %{z:.1f}<br>"     # Display rating with one decimal place
     ),
@@ -52,10 +51,10 @@ choropleth = go.Choropleth(
 )
 
 # =============================
-# Step 4: Combine and Customize the Layout
+# Step 4: Customize the Layout
 # =============================
 
-# Combine the choropleth trace into a figure (no scattergeo trace here)
+# Create the figure with only the Choropleth trace
 fig = go.Figure(data=[choropleth])
 
 # Update layout
@@ -76,6 +75,7 @@ fig.update_layout(
     paper_bgcolor="black",                 # Black background for the figure
     margin=dict(l=10, r=10, t=50, b=10)    # Adjust margins for better visuals
 )
+
 
 # =============================
 # Step 5: Save and Show the Map
