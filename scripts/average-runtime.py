@@ -4,7 +4,7 @@ from pyspark.sql.functions import col, avg
 # Initialize Spark session
 spark = SparkSession.builder.appName("RuntimeTrends").getOrCreate()
 
-# Load the dataset
+# Loading the dataset
 file_path = "cleaned_titles.csv/file.csv" 
 df = spark.read.csv(file_path, header=True, inferSchema=True)
 

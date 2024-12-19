@@ -5,8 +5,8 @@ from pyspark.sql.types import IntegerType
 # Initialize Spark session
 spark = SparkSession.builder.appName("AgeCertificationTrends").getOrCreate()
 
-# Load the dataset
-file_path = "cleaned_titles.csv/file.csv"  # Correct path to your dataset
+# Loading the dataset
+file_path = "cleaned_titles.csv/file.csv" 
 df = spark.read.csv(file_path, header=True, inferSchema=True)
 
 # Filter for valid release_year (convertible to integer) and non-null age certification
