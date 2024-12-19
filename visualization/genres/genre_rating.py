@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the dataset
-df = pd.read_csv("datasets/genre_ratings.csv")  # Replace with your file path
+df = pd.read_csv("../../datasets/genre_ratings.csv") 
 
 # Remove rows with missing values in 'average_imdb_rating' or 'average_tmdb_rating'
 df = df.dropna(subset=["average_imdb_rating", "average_tmdb_rating"])
@@ -15,7 +15,7 @@ plt.figure(figsize=(12, 8))
 plt.title("Comparison of IMDb and TMDb Ratings by Genre", fontsize=16, fontweight="bold")
 plt.xlabel("Genres", fontsize=12)
 plt.ylabel("Average Rating", fontsize=12)
-plt.ylim(df["average_imdb_rating"].min() - 0.1, df["average_tmdb_rating"].max() + 0.1)  # Adjust limits to fit data
+plt.ylim(df["average_imdb_rating"].min() - 0.1, df["average_tmdb_rating"].max() + 0.1)
 
 # Plot IMDb and TMDb ratings
 plt.plot(df["genre"], df["average_imdb_rating"], marker="o", label="IMDb Rating", linewidth=2, color="#1f77b4")

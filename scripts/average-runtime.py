@@ -5,10 +5,10 @@ from pyspark.sql.functions import col, avg
 spark = SparkSession.builder.appName("RuntimeTrends").getOrCreate()
 
 # Loading the dataset
-file_path = "cleaned_titles.csv/file.csv" 
+file_path = "../cleaned_titles.csv/file.csv" 
 df = spark.read.csv(file_path, header=True, inferSchema=True)
 
-# Filter for Movies only
+# Filtering for Movies only
 movies_df = df.filter(col("type") == "movie")
 
 # Calculate average runtime per release year

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Load the dataset
-file_path = "../../datasets/genre_ratings.csv"  # Replace with the actual file path
+file_path = "../../datasets/genre_ratings.csv" 
 df = pd.read_csv(file_path)
 
 # Sort genres by average IMDb rating
@@ -13,7 +13,7 @@ df = df.sort_values(by="average_imdb_rating", ascending=False)
 impact_values = df["average_imdb_rating"] - df["average_imdb_rating"].mean()
 
 # Set up the Netflix theme
-plt.style.use("dark_background")  # Dark background for Netflix theme
+plt.style.use("dark_background")  
 netflix_red = "#E50914"
 netflix_gray = "#B81D24"
 
@@ -23,7 +23,7 @@ plt.figure(figsize=(12, 8))
 plt.scatter(
     impact_values,                # X-axis: IMDb Rating Impact
     df["genre"],                  # Y-axis: Genres
-    color=netflix_red,            # Netflix red color for points
+    color=netflix_red,            
     s=100, edgecolor="white", alpha=0.8
 )
 

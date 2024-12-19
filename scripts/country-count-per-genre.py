@@ -6,7 +6,7 @@ from pyspark.sql.functions import countDistinct, col
 spark = SparkSession.builder.appName("CommonGenresAcrossCountries").getOrCreate()
 
 # Load the dataset
-file_path = "top_genres_by_country.csv/part-00000-25be9ef0-8f13-4619-8788-222e9a6049df-c000.csv"
+file_path = "../datasets/top_genres_by_country.csv"
 df = spark.read.csv(file_path, header=True, inferSchema=True)
 
 # Group by Genre and count the number of unique countries

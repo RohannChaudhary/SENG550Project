@@ -4,7 +4,7 @@ from pyspark.sql.functions import countDistinct, col, split, explode, trim, rege
 # Initialize Spark session
 spark = SparkSession.builder.appName("DatasetBasicInfo").getOrCreate()
 
-# Load the dataset
+# Loading the dataset
 file_path = "../cleaned_titles.csv/file.csv" 
 df = spark.read.csv(file_path, header=True, inferSchema=True)
 
@@ -21,7 +21,7 @@ cleaned_df = cleaned_df.withColumn("Country", trim(col("Country"))).withColumn("
 cleaned_df = cleaned_df.filter((col("Country") != "") & (col("Country").isNotNull()) & (col("Country") != "romance"))
 cleaned_df = cleaned_df.filter((col("Genre") != "") & (col("Genre").isNotNull()))
 
-# Count total titles (movies and shows)
+# Count total titles
 total_titles_count = cleaned_df.count()
 
 # Count the number of movies and shows

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Load the dataset
-df = pd.read_csv("datasets/all_genres_by_country.csv")  # Update with the correct file path
+df = pd.read_csv("../../datasets/all_genres_by_country.csv") 
 
 # =============================
 # Step 1: Clean the Dataset
