@@ -82,10 +82,10 @@ fig.update_layout(
 # =============================
 
 # Save the map as an interactive HTML file
-fig.write_html("country_ratings_avg_with_ratings_labels.html")
+fig.write_html("country_ratings_avg_no_labels.html")
 
 # Save the map as a static image
-fig.write_image("country_ratings_avg_with_ratings_labels.png", format="png", scale=2)
+fig.write_image("country_ratings_avg_no_labels.png", format="png", scale=2)
 
 # Show the interactive map
 fig.show()
