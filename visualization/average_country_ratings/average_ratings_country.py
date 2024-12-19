@@ -51,20 +51,12 @@ choropleth = go.Choropleth(
     colorbar_tickformat=".1f"              # Format colorbar ticks to one decimal place
 )
 
-# Scattergeo trace for ratings labels
-scattergeo = go.Scattergeo(
-    locations=df['ISO-3'],                 # ISO-3 country codes
-    text=df['Rating'].map("{:.1f}".format),  # Format ratings to one decimal place
-    mode="text",                           # Display as text
-    textfont=dict(size=10, color="white")  # Styling for the text labels
-)
-
 # =============================
 # Step 4: Combine and Customize the Layout
 # =============================
 
-# Combine both traces into a figure
-fig = go.Figure(data=[choropleth, scattergeo])
+# Combine the choropleth trace into a figure (no scattergeo trace here)
+fig = go.Figure(data=[choropleth])
 
 # Update layout
 fig.update_layout(
@@ -90,10 +82,10 @@ fig.update_layout(
 # =============================
 
 # Save the map as an interactive HTML file
-fig.write_html("country_ratings_avg_with_ratings_labels.html")
+fig.write_html("country_ratings_avg_no_labels.html")
 
 # Save the map as a static image
-fig.write_image("country_ratings_avg_with_ratings_labels.png", format="png", scale=2)
+fig.write_image("country_ratings_avg_no_labels.png", format="png", scale=2)
 
 # Show the interactive map
 fig.show()
